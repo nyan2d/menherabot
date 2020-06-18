@@ -8,10 +8,11 @@ import (
 )
 
 func (a *App) rollCommand(m *tg.Message) {
-	a.bot.Reply(m, fmt.Sprintf("%v", rand.Intn(99) + 1))
+	num := rand.Intn(99) + 1
+	a.bot.Reply(m, fmt.Sprintf("%v", num))
 }
 
-func (a *App) vakmanCommand(m *tg.Message) {
-	x := m.Sender.ID % 100
-	a.bot.Reply(m, fmt.Sprintf("ты вакмен на %v%%", x))
+func (a *App) vacmanCommand(m *tg.Message) {
+	vacrate := m.Sender.ID % 100
+	a.bot.Reply(m, fmt.Sprintf("Ты вакмен на %v%%", vacrate))
 }
