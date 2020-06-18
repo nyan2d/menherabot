@@ -28,13 +28,14 @@ func NewApp(cfg *config.Config) *App {
 		bot: b,
 	}
 
-	a.bindHandlers(b)
+	a.bindHandlers()
 
 	return a
 }
 
-func (a *App) bindHandlers(b *tg.Bot) {
-	a.bot.Handle("/roll", a.rollCmd)
+func (a *App) bindHandlers() {
+	a.bot.Handle("/roll", a.rollCommand)
+	a.bot.Handle("/vakman", a.vakmanCommand)
 }
 
 func (a *App) Run() {
