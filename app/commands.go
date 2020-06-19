@@ -47,8 +47,7 @@ func (a *App) rollCommand(m *tg.Message) {
 }
 
 func (a *App) vacmanCommand(m *tg.Message) {
-	unix, _ := time.Parse("UnixDate", time.UnixDate)
-	since := int(time.Now().Sub(unix).Hours() / 24)
-	vacrate := (m.Sender.ID * since) % 100
+	t := time.Now()
+	vacrate := (t.Year()+int(t.Month())+t.Day() * m.Sender.ID) % 100
 	a.bot.Reply(m, fmt.Sprintf("Ты вакмен на %v%%", vacrate))
 }
