@@ -1,6 +1,7 @@
 package main
 
 import (
+	"flag"
 	"math/rand"
 	"time"
 
@@ -11,7 +12,12 @@ import (
 func main() {
 	rand.Seed(time.Now().UnixNano())
 
-	c, err := config.ReadConfigFromFile("config.json")
+	cfgpath := "config.json"
+
+	flag.Parse()
+	flag.StringVar(&cfgpath, "c", "config.json", "config file path")
+
+	c, err := config.ReadConfigFromFile(cfgpath)
 	if err != nil {
 		panic(err)
 	}
