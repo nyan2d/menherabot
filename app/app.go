@@ -39,7 +39,7 @@ func NewApp(cfg *config.Config) *App {
 
 func (a *App) bindHandlers() {
 	a.bot.Handle("/roll", a.rollCommand)
-	a.bot.Handle("/rotate", a.champikiCommand)
+	a.bot.Handle("/rotation", a.rotationCommand)
 	a.bot.Handle("/vacman", a.vacmanCommand)
 }
 
