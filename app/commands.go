@@ -2,24 +2,42 @@ package app
 
 import (
 	"fmt"
-	tg "github.com/tucnak/telebot"
 	"math/rand"
 	"strconv"
+	"strings"
+
+	tg "github.com/tucnak/telebot"
+	"github.com/wesovilabs/koazee"
 )
 
 func (a *App) champikiCommand(m *tg.Message) {
 	freeRotate, _ := a.leagueClient.Riot.Champion.GetFreeRotation()
 	allChamps, _ := a.leagueClient.DataDragon.GetChampions()
 
-	res := ""
+	champNames := []string{}
 	for _, champion := range allChamps {
 		for _, rotateId := range freeRotate.FreeChampionIDs {
 			if strconv.Itoa(rotateId) == champion.Key {
-				res += champion.Name + "\n"
+				champNames = append(champNames, champion.Name)
 			}
 		}
 	}
-	a.bot.Reply(m, res)
+
+	counter := 0
+	xd := koazee.StreamOf(champNames).
+		Sort(
+			func(a, b string) int {
+				return strings.Compare(a, b)
+			},
+		).
+		Map(func(a string) string {
+			counter++
+			return fmt.Sprintf("%v) %v", counter, a)
+		}).
+		Out().Val().([]string)
+
+
+	a.bot.Reply(m, strings.Join(xd, "\n"))
 }
 
 func (a *App) rollCommand(m *tg.Message) {

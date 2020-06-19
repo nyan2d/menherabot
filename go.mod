@@ -7,4 +7,5 @@ require (
 	github.com/mitchellh/hashstructure v1.0.0 // indirect
 	github.com/pkg/errors v0.9.1 // indirect
 	github.com/tucnak/telebot v2.0.0+incompatible
+	github.com/wesovilabs/koazee v0.0.5
 )
