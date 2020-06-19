@@ -2,42 +2,43 @@ package app
 
 import (
 	"fmt"
+	"github.com/KnutZuidema/golio/datadragon"
+	tg "github.com/tucnak/telebot"
+	"github.com/wesovilabs/koazee"
 	"math/rand"
 	"strconv"
 	"strings"
-
-	tg "github.com/tucnak/telebot"
-	"github.com/wesovilabs/koazee"
+	"time"
 )
 
-func (a *App) champikiCommand(m *tg.Message) {
-	freeRotate, _ := a.leagueClient.Riot.Champion.GetFreeRotation()
-	allChamps, _ := a.leagueClient.DataDragon.GetChampions()
-
-	champNames := []string{}
-	for _, champion := range allChamps {
-		for _, rotateId := range freeRotate.FreeChampionIDs {
-			if strconv.Itoa(rotateId) == champion.Key {
-				champNames = append(champNames, champion.Name)
-			}
-		}
+func (a *App) rotationCommand(m *tg.Message) {
+	freeRotate, err := a.leagueClient.Riot.Champion.GetFreeRotation()
+	if err != nil {
+		a.bot.Reply(m, err)
+	}
+	allChamps, err := a.leagueClient.DataDragon.GetChampions()
+	if err != nil {
+		a.bot.Reply(m, err)
 	}
 
 	counter := 0
-	xd := koazee.StreamOf(champNames).
-		Sort(
-			func(a, b string) int {
-				return strings.Compare(a, b)
-			},
-		).
-		Map(func(a string) string {
-			counter++
-			return fmt.Sprintf("%v) %v", counter, a)
+	rotation := koazee.StreamOf(freeRotate.FreeChampionIDs).
+		Map(func(a int) datadragon.ChampionData {
+			for _, champ := range allChamps {
+				if champ.Key == strconv.Itoa(a) {
+					return champ
+				}
+			}
+			return datadragon.ChampionData{}
 		}).
-		Out().Val().([]string)
-
-
-	a.bot.Reply(m, strings.Join(xd, "\n"))
+		Sort(func (a, b datadragon.ChampionData) int {
+			return strings.Compare(a.Name, b.Name)
+		}).
+		Map(func (data datadragon.ChampionData) string {
+			counter++
+			return fmt.Sprintf("%v) %v", counter, data.Name)
+		}).Out().Val().([]string)
+	a.bot.Reply(m, strings.Join(rotation, "\n"))
 }
 
 func (a *App) rollCommand(m *tg.Message) {
@@ -46,6 +47,8 @@ func (a *App) rollCommand(m *tg.Message) {
 }
 
 func (a *App) vacmanCommand(m *tg.Message) {
-	vacrate := m.Sender.ID % 100
+	unix, _ := time.Parse("UnixDate", time.UnixDate)
+	since := int(time.Now().Sub(unix).Hours() / 24)
+	vacrate := (m.Sender.ID * since) % 100
 	a.bot.Reply(m, fmt.Sprintf("Ты вакмен на %v%%", vacrate))
 }
