@@ -9,6 +9,7 @@ import (
 
 type Config struct {
 	BotToken string `json:"bot_token"`
+	LeagueToken string `json:"league_token"`
 }
 
 func ReadConfig(r io.Reader) (*Config, error) {
