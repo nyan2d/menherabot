@@ -2,43 +2,26 @@ package app
 
 import (
 	"fmt"
-	"github.com/KnutZuidema/golio/datadragon"
-	tg "github.com/tucnak/telebot"
-	"github.com/wesovilabs/koazee"
 	"math/rand"
-	"strconv"
+	"sort"
 	"strings"
 	"time"
+
+	"github.com/nyan2d/menherabot/lol"
+	tg "github.com/tucnak/telebot"
 )
 
 func (a *App) rotationCommand(m *tg.Message) {
-	freeRotate, err := a.leagueClient.Riot.Champion.GetFreeRotation()
+	champs, err := lol.GetFreeChampPool()
 	if err != nil {
-		a.bot.Reply(m, err)
-	}
-	allChamps, err := a.leagueClient.DataDragon.GetChampions()
-	if err != nil {
-		a.bot.Reply(m, err)
+		a.bot.Reply(m, "Не удалось получить список чампиков.")
+		return
 	}
 
-	counter := 0
-	rotation := koazee.StreamOf(freeRotate.FreeChampionIDs).
-		Map(func(a int) datadragon.ChampionData {
-			for _, champ := range allChamps {
-				if champ.Key == strconv.Itoa(a) {
-					return champ
-				}
-			}
-			return datadragon.ChampionData{}
-		}).
-		Sort(func (a, b datadragon.ChampionData) int {
-			return strings.Compare(a.Name, b.Name)
-		}).
-		Map(func (data datadragon.ChampionData) string {
-			counter++
-			return fmt.Sprintf("%v) %v", counter, data.Name)
-		}).Out().Val().([]string)
-	a.bot.Reply(m, strings.Join(rotation, "\n"))
+	sort.Slice(champs, func(a, b int) bool {
+		return strings.Compare(champs[a], champs[b]) > 0
+	})
+	a.bot.Reply(m, strings.Join(champs, "\r\n"))
 }
 
 func (a *App) rollCommand(m *tg.Message) {
@@ -48,6 +31,6 @@ func (a *App) rollCommand(m *tg.Message) {
 
 func (a *App) vacmanCommand(m *tg.Message) {
 	t := time.Now()
-	vacrate := (t.Year()+int(t.Month())+t.Day() * m.Sender.ID) % 100
+	vacrate := (t.Year() + int(t.Month()) + t.Day()*m.Sender.ID) % 100
 	a.bot.Reply(m, fmt.Sprintf("Ты вакмен на %v%%", vacrate))
 }
