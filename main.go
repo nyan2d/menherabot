@@ -7,6 +7,7 @@ import (
 
 	"github.com/nyan2d/menherabot/app"
 	"github.com/nyan2d/menherabot/config"
+	"github.com/nyan2d/menherabot/lol"
 )
 
 func main() {
@@ -21,6 +22,8 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
+
+	lol.Init(c.LeagueToken)
 
 	a := app.NewApp(c)
 	a.Run()

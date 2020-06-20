@@ -1,8 +1,6 @@
 package app
 
 import (
-	"github.com/KnutZuidema/golio"
-	"github.com/KnutZuidema/golio/api"
 	"time"
 
 	"github.com/nyan2d/menherabot/config"
@@ -11,7 +9,6 @@ import (
 
 type App struct {
 	bot *tg.Bot
-	leagueClient *golio.Client
 }
 
 func NewApp(cfg *config.Config) *App {
@@ -29,7 +26,6 @@ func NewApp(cfg *config.Config) *App {
 
 	a := &App{
 		bot: b,
-		leagueClient: golio.NewClient(cfg.LeagueToken, golio.WithRegion(api.RegionEuropeWest)),
 	}
 
 	a.bindHandlers()
