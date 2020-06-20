@@ -19,7 +19,7 @@ func (a *App) rotationCommand(m *tg.Message) {
 	}
 
 	sort.Slice(champs, func(a, b int) bool {
-		return strings.Compare(champs[a], champs[b]) > 0
+		return strings.Compare(champs[a], champs[b]) < 0
 	})
 	a.bot.Reply(m, strings.Join(champs, "\r\n"))
 }
