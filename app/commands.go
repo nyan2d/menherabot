@@ -29,6 +29,20 @@ func (a *App) rollCommand(m *tg.Message) {
 	a.bot.Reply(m, fmt.Sprintf("%v", num))
 }
 
+func (a *App) pickCommand(m *tg.Message) {
+	if len(m.Payload) == 0 {
+		a.bot.Reply(m, "Ты дебил?")
+		return
+	}
+	list := strings.Split(m.Payload, " ")
+	if len(list) < 2 {
+		a.bot.Reply(m, "Пошел нах!")
+		return
+	}
+	choise := list[rand.Intn(len(list))]
+	a.bot.Reply(m, strings.Replace(choise, "_", " ", -1))
+}
+
 func (a *App) vacCommand(m *tg.Message) {
 	t := time.Now()
 	vacrate := (t.Year() + int(t.Month()) + t.Day()*m.Sender.ID) % 100
