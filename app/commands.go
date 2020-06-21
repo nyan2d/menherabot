@@ -3,7 +3,9 @@ package app
 import (
 	"fmt"
 	"math/rand"
+	"regexp"
 	"sort"
+	"strconv"
 	"strings"
 	"time"
 
@@ -25,7 +27,12 @@ func (a *App) rotationCommand(m *tg.Message) {
 }
 
 func (a *App) rollCommand(m *tg.Message) {
-	num := rand.Intn(99) + 1
+	limit := 99
+	limstr := regexp.MustCompile(`^[1-9]\d{0,4}$`).FindString(m.Payload)
+	if len(limstr) > 0 {
+		limit, _ = strconv.Atoi(limstr)
+	}
+	num := rand.Intn(limit) + 1
 	a.bot.Reply(m, fmt.Sprintf("%v", num))
 }
 
