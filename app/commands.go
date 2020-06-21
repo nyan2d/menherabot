@@ -29,7 +29,7 @@ func (a *App) rollCommand(m *tg.Message) {
 	a.bot.Reply(m, fmt.Sprintf("%v", num))
 }
 
-func (a *App) vacmanCommand(m *tg.Message) {
+func (a *App) vacCommand(m *tg.Message) {
 	t := time.Now()
 	vacrate := (t.Year() + int(t.Month()) + t.Day()*m.Sender.ID) % 100
 	a.bot.Reply(m, fmt.Sprintf("Ты вакмен на %v%%", vacrate))
