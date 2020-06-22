@@ -13,24 +13,19 @@ type App struct {
 
 func NewApp(cfg *config.Config) *App {
 	settings := tg.Settings{
-		Token: cfg.BotToken,
-		Poller: &tg.LongPoller{
-			Timeout: 10 * time.Second,
-		},
+		Token:  cfg.BotToken,
+		Poller: NewLimiter(3 * time.Second).Poller(),
 	}
 
-	b, err := tg.NewBot(settings)
-	if err != nil {
+	if b, err := tg.NewBot(settings); err != nil {
 		panic(err)
+	} else {
+		a := &App{
+			bot: b,
+		}
+		a.bindHandlers()
+		return a
 	}
-
-	a := &App{
-		bot: b,
-	}
-
-	a.bindHandlers()
-
-	return a
 }
 
 func (a *App) bindHandlers() {
