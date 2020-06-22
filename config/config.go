@@ -8,7 +8,7 @@ import (
 )
 
 type Config struct {
-	BotToken string `json:"bot_token"`
+	BotToken    string `json:"bot_token"`
 	LeagueToken string `json:"league_token"`
 }
 
