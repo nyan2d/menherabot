@@ -21,7 +21,7 @@ func NewLimiter(rate time.Duration) *Limiter {
 	}
 
 	r.poller = tg.NewMiddlewarePoller(longpoller, func(u *tg.Update) bool {
-		if u.Message == nil {
+		if u.Message == nil || u.Message.Text == "" || u.Message.Text[0] != '/' {
 			return true
 		}
 		ti, ok := r.users[u.Message.Sender.ID]
