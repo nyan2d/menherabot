@@ -51,7 +51,7 @@ func (a *App) pickCommand(m *tg.Message) {
 }
 
 func (a *App) vacCommand(m *tg.Message) {
-	t := time.Now()
+	t := time.Now().UTC().Add(time.Hour*3)
 	vacrate := (t.Year() + int(t.Month()) + t.Day()*m.Sender.ID) % 100
 	a.bot.Reply(m, fmt.Sprintf("Ты вакмен на %v%%", vacrate))
 }
