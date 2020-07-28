@@ -10,6 +10,7 @@ import (
 	"time"
 
 	"github.com/nyan2d/menherabot/lol"
+	"github.com/nyan2d/menherabot/util"
 	tg "github.com/tucnak/telebot"
 )
 
@@ -51,7 +52,8 @@ func (a *App) pickCommand(m *tg.Message) {
 }
 
 func (a *App) vacCommand(m *tg.Message) {
-	t := time.Now().UTC().Add(time.Hour*3)
-	vacrate := (t.Year() + int(t.Month()) + t.Day()*m.Sender.ID) % 100
-	a.bot.Reply(m, fmt.Sprintf("Ты вакмен на %v%%", vacrate))
+	ti := util.TimeToInt(time.Now().UTC().Add(time.Hour * 3))
+	ti += m.Sender.ID
+	rate := ((1664525*ti + 1013904223) % 2147483647) % 101
+	a.bot.Reply(m, fmt.Sprintf("Ты вакмен на %v%%", rate))
 }
