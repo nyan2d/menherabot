@@ -51,9 +51,9 @@ func (a *App) pickCommand(m *tg.Message) {
 	a.bot.Reply(m, strings.Replace(choise, "_", " ", -1))
 }
 
-func (a *App) vacCommand(m *tg.Message) {
+func (a *App) fartCommand(m *tg.Message) {
 	t := util.TimeToInt(time.Now().UTC().Add(time.Hour * 3))
 	t += int64(m.Sender.ID)
 	rate := ((t + 321) * 123) % 101
-	a.bot.Reply(m, fmt.Sprintf("Ты вакмен на %v%%", rate))
+	a.bot.Reply(m, fmt.Sprintf("Уровень фарта %v%%", rate))
 }

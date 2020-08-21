@@ -32,7 +32,7 @@ func (a *App) bindHandlers() {
 	a.bot.Handle("/roll", a.rollCommand)
 	a.bot.Handle("/pick", a.pickCommand)
 	a.bot.Handle("/rotation", a.rotationCommand)
-	a.bot.Handle("/vac", a.vacCommand)
+	a.bot.Handle("/fart", a.fartCommand)
 }
 
 func (a *App) Run() {
